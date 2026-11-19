@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#ff8fb8">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<title>تعلّم مع ماما</title>
+<style>
+:root{--ink:#4a2c6b}
+*{box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100vh;font-family:"Chalkboard SE","Comic Sans MS","Noto Sans Arabic",Tahoma,sans-serif;color:var(--ink);background:linear-gradient(#bfeaff,#fff3c4);padding:env(safe-area-inset-top) 12px 28px;overflow-x:hidden;touch-action:manipulation}
+.bg span{position:fixed;font-size:2rem;opacity:.35;animation:fl 6s ease-in-out infinite;pointer-events:none}
+@keyframes fl{50%{transform:translateY(-18px) rotate(15deg)}}
+@keyframes bn{50%{transform:scale(1.12)}}
+@keyframes pop{0%{transform:scale(.4)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+header{display:flex;align-items:center;gap:8px;padding:10px 0;position:relative}
+h1{flex:1;margin:0;font-size:1.2rem;text-align:center}
+.rb{border:0;border-radius:50%;width:46px;height:46px;font-size:1.3rem;background:#fff;box-shadow:0 5px 0 #d9c7ff;cursor:pointer}
+.st{background:#ffd23f;border-radius:99px;padding:8px 12px;font-weight:bold;box-shadow:0 5px 0 #e0a800;white-space:nowrap}
+.home{display:grid;grid-template-columns:1fr 1fr;gap:14px;position:relative}
+.hb{border:0;border-radius:28px;padding:16px 6px;font:inherit;font-size:1.15rem;font-weight:bold;color:#fff;box-shadow:0 8px 0 rgba(0,0,0,.18);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
+.hb:active{transform:translateY(6px);box-shadow:0 2px 0 rgba(0,0,0,.18)}
+.hb i{font-style:normal;font-size:3rem;animation:bn 2s infinite}
+.hb:last-child{grid-column:1/-1}
+.mascot{text-align:center;font-size:4.5rem;animation:bn 2s infinite}
+.stage{background:#fff;border:5px solid #ffb3d1;border-radius:32px;padding:16px;text-align:center;box-shadow:0 8px 0 #ffb3d1;margin:6px 0 18px;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:12px;position:relative}
+.tile{background:#fff;border:4px solid;border-radius:24px;padding:8px 4px;font:inherit;color:var(--ink);font-weight:bold;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.12);display:flex;flex-direction:column;align-items:center;gap:2px}
+.tile:active{transform:scale(.93)}
+.lt{font-size:1.8rem;color:#ff4f8b;line-height:1.1}.lt.sm{font-size:1.4rem}.lt.bigl{font-size:5rem}
+.vz{height:68px;display:flex;align-items:center;justify-content:center}
+.em{font-size:3rem;line-height:1}
+.sw,.sv{width:60px;height:60px}
+.sw{border-radius:50%;border:4px solid #fff;box-shadow:0 4px 0 rgba(0,0,0,.2),0 0 0 2px rgba(0,0,0,.08)}
+.vz.big{height:120px}.vz.big .em{font-size:6rem;animation:pop .5s}.vz.big .sw,.vz.big .sv{width:110px;height:110px;animation:pop .5s}
+.nm{font-size:2rem;font-weight:bold}
+.row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.btn{border:0;border-radius:99px;padding:12px 20px;font:inherit;font-size:1.05rem;font-weight:bold;color:#fff;background:#47c985;box-shadow:0 5px 0 #2f9c64;cursor:pointer}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #2f9c64}
+.b2{background:#4fb3ff;box-shadow:0 5px 0 #2b87cc}.b3{background:#ff6f91;box-shadow:0 5px 0 #cc4d6c}.b4{background:#6b4c9a;box-shadow:0 5px 0 #4a2c6b}
+.hint{background:#fff3c4;border-radius:16px;padding:10px 14px;line-height:1.6}
+canvas{width:250px;height:250px;max-width:100%;background:#fffdf7;border:4px dashed #a57bff;border-radius:22px;touch-action:none}
+.qp{font-size:1.4rem;font-weight:bold;line-height:1.7}
+.opts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.opt{background:#fff6e5;border:4px solid #ffd23f;border-radius:24px;width:104px;height:104px;font:inherit;cursor:pointer;box-shadow:0 5px 0 #e0a800;display:flex;align-items:center;justify-content:center;padding:0}
+.opt:active{transform:scale(.93)}
+.opt.right{background:#d9ffe9;border-color:#47c985;box-shadow:0 5px 0 #2f9c64}.opt.wrong{background:#ffe0e8;border-color:#ff6f91;opacity:.7}
+.msg{font-size:1.25rem;font-weight:bold;min-height:1.6em}
+.grid.jb{grid-template-columns:1fr 1fr}.tile small{font-size:.8rem;font-weight:normal;opacity:.85}
+.cwrap{display:flex;gap:10px;width:100%;align-items:stretch}.pal{display:flex;flex-direction:column;gap:8px;background:#fff3c4;border-radius:20px;padding:8px;justify-content:center}
+.cs{width:40px;height:40px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px #0002;padding:0}.cs.on{outline:4px solid #ff4f8b}
+#art{flex:1;min-width:0;max-height:340px;background:#fffdf7;border-radius:20px}.rg{cursor:pointer}
+.hid{display:none!important}
+.conf{position:fixed;top:-20px;width:10px;height:14px;border-radius:3px;pointer-events:none;animation:fall 1.8s linear forwards;z-index:99}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+.ov{position:fixed;inset:0;background:rgba(40,20,70,.7);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px}
+.gate{background:#fff;border-radius:26px;padding:22px;text-align:center;max-width:330px;width:100%}
+.gate input{font-size:1.4rem;width:110px;padding:8px;text-align:center;border-radius:12px;border:3px solid #a57bff;margin:10px 0}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#4a2c6b;color:#fff;padding:12px 20px;border-radius:99px;z-index:150}
+</style>
+</head>
+<body>
+<div class="bg"><span style="top:12%;left:6%">⭐</span><span style="top:30%;right:8%;animation-delay:1s">☁️</span><span style="top:58%;left:10%;animation-delay:2s">🌈</span><span style="top:78%;right:12%;animation-delay:3s">🎈</span><span style="top:90%;left:40%;animation-delay:1.5s">✨</span></div>
+<header>
+<button class="rb" id="lk">🔒</button>
+<h1 id="ttl">🌈 تعلّم مع ماما</h1>
+<div class="st" id="sc">⭐ 0</div>
+<button class="rb hid" id="hm">🏠</button>
+</header>
+<main id="app"></main>
+
+<script>
+// ===== الحماية من الخروج بالخطأ =====
+history.pushState({},"");
+addEventListener("popstate",()=>{history.pushState({},"");toast("للخروج اطلبي من ماما 🔒")});
+document.addEventListener("contextmenu",e=>e.preventDefault());
+document.addEventListener("click",e=>{if(e.target.closest("a"))e.preventDefault()});
+function toast(t){const d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2200)}
+
+// ===== البيانات: حرف|اسم|صورة =====
+const ANI="أ|أسد|🦁;ب|بقرة|🐄;ت|تمساح|🐊;ث|ثعلب|🦊;ج|جمل|🐫;ح|حصان|🐴;خ|خروف|🐑;د|دب|🐻;ذ|ذئب|🐺;ر|رنة|🦌;ز|زرافة|🦒;س|سمكة|🐟;ش|شيتا|🐆;ص|صقر|🦅;ض|ضفدع|🐸;ط|طاووس|🦚;ظ|ظربان|🦨;ع|عصفور|🐦;غ|غوريلا|🦍;ف|فيل|🐘;ق|قرد|🐒;ك|كلب|🐶;ل|لاما|🦙;م|ماعز|🐐;ن|نحلة|🐝;ه|هرة|🐈;و|وطواط|🦇;ي|يمامة|🕊️;أ|أرنب|🐰;ب|بطة|🦆;د|دجاجة|🐔;ح|حوت|🐳;ف|فراشة|🦋;ق|قطة|🐱";
+const OBJ="أ|أتوبيس|🚌;ب|بيت|🏠;ت|تلفاز|📺;ث|ثلج|🧊;ج|جرس|🔔;ح|حقيبة|👜;خ|خيمة|⛺;د|دراجة|🚲;ذ|ذرة|🌽;ر|راديو|📻;ز|زهرة|🌸;س|ساعة|⏰;ش|شمعة|🕯️;ص|صندوق|📦;ض|ضوء|💡;ط|طبق|🍽️;ظ|ظرف|✉️;ع|علم|🚩;غ|غسالة|🧺;ف|فنجان|☕;ق|قلم|✏️;ك|كرسي|🪑;ل|لعبة|🎲;م|مفتاح|🔑;ن|نظارة|👓;ه|هاتف|📱;و|ورقة|📄;ي|يد|✋;ك|كتاب|📖;س|سيارة|🚗;ك|كرة|⚽;ط|طائرة|✈️";
+const SHP="د|دائرة|cir;م|مربع|sqr;م|مثلث|tri;م|مستطيل|rct;ن|نجمة|str;ق|قلب|hrt;ب|بيضاوي|ovl;م|معين|rhm";
+const COL="أ|أحمر|#e53935;أ|أزرق|#1e88e5;أ|أصفر|#fdd835;أ|أخضر|#43a047;أ|أبيض|#ffffff;أ|أسود|#212121;ب|برتقالي|#fb8c00;ب|بنفسجي|#8e24aa;ب|بني|#795548;و|وردي|#f48fb1;ر|رمادي|#9e9e9e";
+const JOB="ط|طبيب|👨‍⚕️|يعالج المرضى;م|معلمة|👩‍🏫|تعلّم الأطفال;ش|شرطي|👮|يحمي الناس;ر|رجل إطفاء|🧑‍🚒|يطفئ الحرائق;ط|طيار|🧑‍✈️|يقود الطائرة;ط|طباخ|🧑‍🍳|يطبخ الطعام;م|مزارع|🧑‍🌾|يزرع الخضار;س|سائق|🚕|يوصل الناس بالسيارة;ن|نجار|🔨|يصنع الأثاث;خ|خباز|🥖|يخبز الخبز;ف|فنان|🧑‍🎨|يرسم اللوحات;ب|بحار|⚓|يقود السفينة;ح|حلاق|💈|يقص الشعر;ع|عامل بناء|👷|يبني البيوت;ص|صياد|🎣|يصطاد السمك;ر|رائد فضاء|🧑‍🚀|يسافر إلى الفضاء;ص|صيدلي|💊|يبيع الدواء;م|مغنية|🎤|تغني الأغاني";
+const HNT="خط مستقيم من فوق لتحت ثم قوس صغير;خط أفقي بقوس ثم نقطة تحت;مثل الباء ونقطتان فوق;مثل الباء وثلاث نقاط فوق;قوس ثم نزول ونقطة في الوسط;قوس كبير بدون نقطة;مثل الحاء ونقطة فوق;قوس صغير ينزل بدون نقطة;مثل الدال ونقطة فوق;خط منحنٍ صغير ينزل;مثل الراء ونقطة فوق;ثلاث أسنان متصلة;مثل السين وثلاث نقاط فوق;دائرة صغيرة مع خط ممدود;مثل الصاد ونقطة فوق;دائرة صغيرة وعصا مستقيمة;مثل الطاء ونقطة فوق;فم صغير ثم خط ينزل;مثل العين ونقطة فوق;دائرة صغيرة وذيل ونقطة فوق;مثل الفاء ونقطتان فوق;خط مستقيم وخطان قصيران;عصا مستقيمة ثم قوس لليسار;دائرة صغيرة وخط ينزل;قوس مثل الكأس ونقطة فوق;دائرة صغيرة مفتوحة;دائرة صغيرة وذيل ينزل;ثلاث أسنان ونقطتان تحت".split(";");
+
+const mk=(s,k)=>s.split(";").map(r=>{const[l,w,v,d]=r.split("|");return{l,w,k,v,d}});
+const D={a:mk(ANI,"e"),o:mk(OBJ,"e"),s:mk(SHP,"s"),c:mk(COL,"c"),j:mk(JOB,"e")};
+const LT=D.a.slice(0,28);
+const PAL=["#ff6f91","#4fb3ff","#47c985","#ffb300","#a57bff","#ff8a50"];
+const rnd=a=>a[Math.random()*a.length|0];
+const shuf=a=>[...a].sort(()=>Math.random()-.5);
+const $=s=>document.querySelector(s),app=$("#app");
+
+// ===== الأشكال (SVG) =====
+const P=(n,r=42,rot=-90,r2)=>{const m=r2?2*n:n;let a=[];for(let i=0;i<m;i++){const R=r2&&i%2?r2:r,t=(rot+i*360/m)*Math.PI/180;a.push((50+R*Math.cos(t)).toFixed(1)+","+(50+R*Math.sin(t)).toFixed(1))}return a.join(" ")};
+const pg=(p,c)=>`<polygon points="${p}" fill="${c}"/>`;
+const ln=(p,c)=>`<polyline points="${p}" fill="none" stroke="${c}" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>`;
+let gid=0;
+const SH={
+cyl:c=>`<path d="M18 22v56a32 12 0 0 0 64 0V22z" fill="${c}"/><ellipse cx="50" cy="22" rx="32" ry="12" fill="${c}"/><ellipse cx="50" cy="22" rx="32" ry="12" fill="#fff" opacity=".4"/>`,
+ovl:c=>`<ellipse cx="50" cy="50" rx="42" ry="27" fill="${c}"/>`,
+wav:c=>`<path d="M6 55Q22 20 38 55T70 55T96 50" fill="none" stroke="${c}" stroke-width="12" stroke-linecap="round"/>`,
+oct:c=>pg(P(8,44,-67.5),c),
+grd:c=>[0,1,2].map(i=>[0,1,2].map(j=>`<rect x="${12+i*29}" y="${12+j*29}" width="25" height="25" rx="5" fill="${c}"/>`).join("")).join(""),
+rng:c=>`<circle cx="50" cy="50" r="32" fill="none" stroke="${c}" stroke-width="16"/>`,
+pen:c=>pg(P(5),c),
+cir:c=>`<circle cx="50" cy="50" r="42" fill="${c}"/>`,
+zig:c=>ln("8,72 29,28 50,72 71,28 92,72",c),
+qtr:c=>`<path d="M14 86V14A72 72 0 0 1 86 86z" fill="${c}"/>`,
+ang:c=>ln("84,84 16,84 62,18",c),
+arr:c=>pg("8,38 58,38 58,16 94,50 58,84 58,62 8,62",c),
+trp:c=>pg("30,25 70,25 94,75 6,75",c),
+cub:c=>pg("50,10 88,30 88,70 50,90 12,70 12,30",c)+pg("50,10 88,30 50,50 12,30","#fff").replace("/>",' opacity=".35"/>')+pg("88,30 50,50 50,90 88,70","#000").replace("/>",' opacity=".2"/>'),
+brs:c=>pg(P(12,46,-90,28),c),
+kit:c=>pg("50,6 82,38 50,94 18,38",c),
+env:c=>`<rect x="8" y="22" width="84" height="58" rx="7" fill="${c}"/>`+ln("12,28 50,58 88,28","#fff").replace('width="12"','width="6"'),
+dec:c=>pg(P(10),c),
+cld:c=>`<g fill="${c}"><circle cx="30" cy="62" r="18"/><circle cx="52" cy="46" r="24"/><circle cx="74" cy="62" r="16"/><rect x="30" y="62" width="44" height="18"/></g>`,
+bub:c=>`<circle cx="50" cy="50" r="40" fill="${c}" opacity=".55" stroke="${c}" stroke-width="4"/><ellipse cx="36" cy="34" rx="10" ry="6" fill="#fff" opacity=".85" transform="rotate(-30 36 34)"/>`,
+hrt:c=>`<path d="M50 88C10 58 8 28 28 20 40 15 50 24 50 32 50 24 60 15 72 20 92 28 90 58 50 88Z" fill="${c}"/>`,
+sph:c=>{const g="g"+gid++;return`<defs><radialGradient id="${g}" cx="35%" cy="30%"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="${c}"/></radialGradient></defs><circle cx="50" cy="50" r="42" fill="url(#${g})"/>`},
+spi:c=>ln(Array.from({length:60},(_,i)=>{const t=i/6,r=3+i*.7;return(50+r*Math.cos(t)).toFixed(1)+","+(50+r*Math.sin(t)).toFixed(1)}).join(" "),c).replace('width="12"','width="7"'),
+tri:c=>pg(P(3,46),c),
+str:c=>pg(P(5,46,-90,19),c),
+crs:c=>`<path d="M68 10A42 42 0 1 0 68 90A33 33 0 1 1 68 10Z" fill="${c}"/>`,
+flw:c=>[0,60,120,180,240,300].map(a=>`<circle cx="${50+26*Math.cos(a*Math.PI/180)}" cy="${50+26*Math.sin(a*Math.PI/180)}" r="17" fill="${c}"/>`).join("")+`<circle cx="50" cy="50" r="13" fill="#ffd23f"/>`,
+gem:c=>pg("20,36 34,14 66,14 80,36 50,88",c)+pg("20,36 80,36 50,88","#fff").replace("/>",' opacity=".3"/>'),
+sqr:c=>`<rect x="12" y="12" width="76" height="76" rx="6" fill="${c}"/>`,
+rct:c=>`<rect x="6" y="26" width="88" height="48" rx="6" fill="${c}"/>`,
+rhm:c=>pg(P(4,46,-90),c)
+};
+function vis(it){
+ if(it.k=="c")return`<div class="sw" style="background:${it.v}"></div>`;
+ if(it.k=="s")return`<svg viewBox="0 0 100 100" class="sv">${SH[it.v](PAL[it.w.length%6])}</svg>`;
+ return`<span class="em">${it.v}</span>`;
+}
+
+// ===== الصوت =====
+let VO=null;
+function pv(){if("speechSynthesis"in window)VO=speechSynthesis.getVoices().find(v=>v.lang&&v.lang.startsWith("ar"))||null}
+if("speechSynthesis"in window){pv();speechSynthesis.onvoiceschanged=pv}
+function speak(t,r=.8,p=1.3){if(!("speechSynthesis"in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="ar-SA";u.rate=r;u.pitch=p;if(VO)u.voice=VO;speechSynthesis.speak(u)}
+let A=null;
+const AC=()=>A=A||new(window.AudioContext||window.webkitAudioContext)();
+function env(g,t,pts){g.gain.setValueAtTime(.0001,t);pts.forEach(([dt,v])=>g.gain.linearRampToValueAtTime(v,t+dt))}
+// ضجيج جمهور يهتف + صفارة احتفال
+function cheer(){
+ try{
+  AC();const t=A.currentTime,sr=A.sampleRate,b=A.createBuffer(1,sr*2.6,sr),d=b.getChannelData(0);
+  for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  const s=A.createBufferSource();s.buffer=b;
+  const f=A.createBiquadFilter();f.type="bandpass";f.Q.value=.8;f.frequency.setValueAtTime(600,t);f.frequency.linearRampToValueAtTime(1900,t+.9);
+  const g=A.createGain();env(g,t,[[.4,.8],[1.5,.5],[2.5,.0001]]);
+  s.connect(f);f.connect(g);g.connect(A.destination);s.start(t);
+  for(let i=0;i<10;i++){const o=A.createOscillator(),og=A.createGain(),fq=250+Math.random()*450,st=t+Math.random()*.25;
+   o.type="sawtooth";o.frequency.setValueAtTime(fq,st);o.frequency.linearRampToValueAtTime(fq*1.6,st+.7);
+   const lp=A.createBiquadFilter();lp.type="lowpass";lp.frequency.value=1400;
+   env(og,st,[[.3,.05],[1.5,.0001]]);o.connect(lp);lp.connect(og);og.connect(A.destination);o.start(st);o.stop(st+1.6)}
+  [880,1100,1320,1760].forEach((fq,i)=>{const o=A.createOscillator(),og=A.createGain(),st=t+i*.13;
+   o.type="square";o.frequency.value=fq;env(og,st,[[.02,.06],[.18,.0001]]);o.connect(og);og.connect(A.destination);o.start(st);o.stop(st+.2)});
+ }catch(e){}
+ speak("هييييه! برافو يا بطلة",.9,1.4);
+}
+// بكاء حزين
+function cry(){
+ try{
+  AC();const t=A.currentTime;
+  [0,.85].forEach(dt=>{const o=A.createOscillator(),l=A.createOscillator(),lg=A.createGain(),g=A.createGain(),lp=A.createBiquadFilter(),st=t+dt;
+   o.type="sawtooth";o.frequency.setValueAtTime(560,st);o.frequency.linearRampToValueAtTime(300,st+.75);
+   l.frequency.value=7;lg.gain.value=22;l.connect(lg);lg.connect(o.frequency);
+   lp.type="lowpass";lp.frequency.value=1100;env(g,st,[[.1,.16],[.75,.0001]]);
+   o.connect(lp);lp.connect(g);g.connect(A.destination);o.start(st);l.start(st);o.stop(st+.8);l.stop(st+.8)});
+ }catch(e){}
+ setTimeout(()=>speak("حاولي مرة أخرى",.8,1.1),1500);
+}
+function confetti(){for(let i=0;i<45;i++){const c=document.createElement("div");c.className="conf";c.style.left=Math.random()*100+"vw";c.style.background=PAL[i%6];c.style.animationDelay=Math.random()*.4+"s";document.body.appendChild(c);setTimeout(()=>c.remove(),2400)}}
+let stars=0;const star=()=>{stars++;$("#sc").textContent="⭐ "+stars};
+const PR=["ممتاز يا بطلة! 🌟","أحسنتِ! أنتِ نجمة ⭐","رائع جداً! 🎉","واو! أنتِ ذكية 💖","برافو عليكِ! 👏"];
+const TR=["حاولي مرة أخرى 💪","قريبة جداً! جربي ثانية 😊","لا بأس، نتعلم معاً 🌈"];
+
+// ===== التنقل =====
+const MENU=[["الحروف","🔤","#ff6f91","L"],["الحيوانات","🦁","#47c985","a"],["الأشكال","🔷","#4fb3ff","s"],["الألوان","🎨","#a57bff","c"],["الأشياء","🧸","#ff8a50","o"],["الوظائف","👩‍⚕️","#26a69a","j"],["الكتابة","✏️","#e6a100","w"],["التلوين","🖍️","#ff7043","d"],["التحديات","🎯","#e0457b","q"]];
+function go(v){
+ if(window.speechSynthesis)speechSynthesis.cancel();
+ const m=MENU.find(x=>x[3]==v);
+ $("#ttl").textContent=m?m[1]+" "+m[0]:"🌈 تعلّم مع ماما";
+ $("#hm").classList.toggle("hid",v=="home");
+ if(v=="home")home();else if(v=="w")write("أ");else if(v=="q")hub();else if(v=="d")paint(0);else list(v);
+ scrollTo(0,0);
+}
+$("#hm").onclick=()=>go("home");
+function home(){
+ app.innerHTML=`<div class="mascot">🐣</div><div class="home">${MENU.map(m=>`<button class="hb" style="background:${m[2]}" data-v="${m[3]}"><i>${m[1]}</i>${m[0]}</button>`).join("")}</div>`;
+ app.querySelectorAll(".hb").forEach(b=>b.onclick=()=>go(b.dataset.v));
+}
+
+// ===== قوائم الحروف / الحيوانات / الأشكال / الألوان / الأشياء =====
+function list(k){
+ const L=k=="L"?LT:D[k];
+ app.innerHTML=`<div class="stage" id="st"><div class="vz big"><span class="em">👋</span></div><div class="nm">اضغطي على أي بطاقة</div></div>
+ <div class="grid${k=="j"?" jb":""}">${L.map((it,i)=>`<button class="tile" style="border-color:${PAL[i%6]}" data-i="${i}"><b class="lt ${k=="L"?"":"sm"}">${it.l}</b><div class="vz">${vis(it)}</div><span>${it.w}</span>${it.d?`<small>${it.d}</small>`:""}</button>`).join("")}</div>`;
+ app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>show(L[b.dataset.i],k));
+}
+function show(it,k){
+ $("#st").innerHTML=`<div class="lt bigl">${it.l}</div><div class="vz big">${vis(it)}</div><div class="nm">${it.w}</div>${it.d?`<div class="hint">${it.d}</div>`:""}
+ <div class="row"><button class="btn" id="sp">🔊 استمعي</button>${k=="L"?'<button class="btn b2" id="wr">✏️ اكتبيه</button>':""}</div>`;
+ const say=()=>speak(it.d?it.w+"،  "+it.d:"حرف "+it.l+"،  "+it.w);
+ $("#sp").onclick=say;if(k=="L")$("#wr").onclick=()=>{$("#ttl").textContent="✏️ الكتابة";write(it.l)};
+ say();$("#st").scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+// ===== تعليم الكتابة =====
+let wl=0,drawing=false,last=null,ctx;
+function guide(){const c=$("#cv");ctx.clearRect(0,0,c.width,c.height);ctx.font="340px 'Noto Naskh Arabic','Noto Sans Arabic',Tahoma,sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillStyle="rgba(160,140,200,.3)";ctx.fillText(LT[wl].l,c.width/2,c.height/2+10)}
+function write(l){
+ wl=Math.max(0,LT.findIndex(x=>x.l==l));const it=LT[wl];
+ app.innerHTML=`<div class="stage"><div class="lt bigl">${it.l}</div><div class="vz"><span class="em">${it.v}</span></div><div class="nm" style="font-size:1.5rem">${it.w}</div>
+ <div class="hint">✏️ ${HNT[wl]}</div><button class="btn" id="sp">🔊 نطق الحرف</button>
+ <canvas id="cv" width="500" height="500"></canvas>
+ <div class="row"><button class="btn b4" id="cl">🧹 امسحي</button><button class="btn b3" id="dn">✨ انتهيت</button></div></div>
+ <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(58px,1fr))">${LT.map((x,i)=>`<button class="tile" style="border-color:${PAL[i%6]}" data-l="${x.l}"><b class="lt">${x.l}</b></button>`).join("")}</div>`;
+ const c=$("#cv");ctx=c.getContext("2d");guide();
+ const pos=e=>{const r=c.getBoundingClientRect();return{x:(e.clientX-r.left)*c.width/r.width,y:(e.clientY-r.top)*c.height/r.height}};
+ c.onpointerdown=e=>{drawing=true;last=pos(e);c.setPointerCapture(e.pointerId)};
+ c.onpointermove=e=>{if(!drawing)return;const p=pos(e);ctx.strokeStyle="#ff4f8b";ctx.lineWidth=18;ctx.lineCap="round";ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y);ctx.stroke();last=p};
+ c.onpointerup=c.onpointercancel=()=>drawing=false;
+ $("#sp").onclick=()=>speak("حرف "+it.l+"،  "+it.w);
+ $("#cl").onclick=guide;
+ $("#dn").onclick=()=>{star();cheer();confetti();setTimeout(guide,1500)};
+ app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>{write(b.dataset.l);scrollTo(0,0)});
+ speak("حرف "+it.l+"،  "+it.w);
+}
+
+// ===== التحديات =====
+const find=(p,pre)=>()=>{const t=rnd(p),o=shuf([t,...shuf(p.filter(x=>x!=t)).slice(0,2)]);return{say:"أين "+pre+t.w+"؟",p:`أين ${pre}<b>${t.w}</b>؟`,o:o.map(x=>[`<div class="vz">${vis(x)}</div>`,x==t])}};
+const G=[
+["🖼️","أين الصورة؟",()=>find([...D.a,...D.o],"")()],
+["🔤","ما الحرف الأول؟",()=>{const p=[...D.a,...D.o],t=rnd(p),ls=[...new Set(p.map(x=>x.l))].filter(l=>l!=t.l),o=shuf([t.l,...shuf(ls).slice(0,2)]);return{say:"ما الحرف الأول في "+t.w+"؟",p:`<div class="vz big">${vis(t)}</div>ما الحرف الأول في <b>${t.w}</b>؟`,o:o.map(l=>[`<b class="lt">${l}</b>`,l==t.l])}}],
+["🅰️","أي صورة تبدأ بالحرف؟",()=>{const p=[...D.a,...D.o],l=rnd(LT).l,t=rnd(p.filter(x=>x.l==l)),o=shuf([t,...shuf(p.filter(x=>x.l!=l)).slice(0,2)]);return{say:"أي صورة تبدأ بحرف "+l+"؟",p:`أي صورة تبدأ بحرف <b class="lt bigl">${l}</b>؟`,o:o.map(x=>[`<div class="vz">${vis(x)}</div>`,x==t])}}],
+["🎨","أين اللون؟",()=>find(D.c,"اللون ")()],
+["🔷","أين الشكل؟",()=>find(D.s,"شكل ")()],
+["👩‍⚕️","من يعمل هذا؟",()=>{const t=rnd(D.j),o=shuf([t,...shuf(D.j.filter(x=>x!=t)).slice(0,2)]);return{say:"من "+t.d+"؟",p:`من <b>${t.d}</b>؟`,o:o.map(x=>[`<div class="vz">${vis(x)}</div>`,x==t])}}]
+];
+function hub(){
+ app.innerHTML=`<div class="home">${G.map((g,i)=>`<button class="hb" style="background:${PAL[i%6]}" data-i="${i}"><i>${g[0]}</i>${g[1]}</button>`).join("")}</div>`;
+ app.querySelectorAll(".hb").forEach(b=>b.onclick=()=>play(+b.dataset.i));
+}
+let R;
+function play(i){R={g:i,n:0,s:0};next()}
+function next(){
+ if(R.n>=10)return end();
+ R.n++;R.ok=1;R.d=0;R.q=G[R.g][2]();
+ app.innerHTML=`<div class="stage"><div class="msg">${G[R.g][1]} — ${R.n}/10 ⭐${R.s}</div><div class="qp">${R.q.p}</div><button class="btn" id="sq">🔊 أعيدي السؤال</button>
+ <div class="opts">${R.q.o.map((o,i)=>`<button class="opt" data-i="${i}">${o[0]}</button>`).join("")}</div>
+ <div class="msg" id="msg"></div><button class="btn b2 hid" id="nx">التالي ➜</button></div>`;
+ $("#sq").onclick=()=>speak(R.q.say);$("#nx").onclick=next;
+ app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+  if(R.d)return;const o=R.q.o[b.dataset.i];
+  if(o[1]){R.d=1;b.classList.add("right");if(R.ok)R.s++;star();cheer();confetti();$("#msg").textContent=rnd(PR);$("#nx").classList.remove("hid")}
+  else{R.ok=0;b.classList.add("wrong");cry();$("#msg").textContent=rnd(TR)}
+ });
+ setTimeout(()=>speak(R.q.say),300);
+}
+function end(){
+ app.innerHTML=`<div class="stage"><div class="mascot">🏆</div><div class="nm">أحسنتِ يا بطلة!</div><div class="qp">أجبتِ ${R.s} من 10 من أول مرة 🌟</div>
+ <div class="row"><button class="btn" id="again">🔁 العبي مرة أخرى</button><button class="btn b2" id="back">🎯 التحديات</button></div></div>`;
+ $("#again").onclick=()=>play(R.g);$("#back").onclick=()=>go("q");
+ cheer();confetti();
+}
+
+
+// ===== التلوين =====
+const ray=Array.from({length:8},(_,i)=>{const a=i*Math.PI/4,f=(r,d)=>[(100+r*Math.cos(a+d)).toFixed(0),(100+r*Math.sin(a+d)).toFixed(0)].join(" ");return`M${f(50,-.22)}L${f(88,0)}L${f(50,.22)}Z`}).join("");
+const ptl=Array.from({length:6},(_,i)=>{const a=i*Math.PI/3;return`<circle cx="${(100+30*Math.cos(a)).toFixed(0)}" cy="${(70+30*Math.sin(a)).toFixed(0)}" r="20"/>`}).join("");
+const bnd=[[85,70],[70,55],[55,40],[40,25]].map(([R,r])=>`<path d="M${100-R} 140A${R} ${R} 0 0 1 ${100+R} 140L${100+r} 140A${r} ${r} 0 0 0 ${100-r} 140Z"/>`).join("");
+const PIC=[
+["☀️","الشمس",["#ffd23f","#fb8c00","#e53935","#81d4fa","#fff176"],`<rect x="0" y="0" width="200" height="200"/><path d="${ray}"/><circle cx="100" cy="100" r="38"/>`],
+["🌸","الزهرة",["#e53935","#f48fb1","#fdd835","#8e24aa","#fb8c00","#43a047","#795548"],`<rect x="94" y="100" width="12" height="90"/><ellipse cx="70" cy="150" rx="22" ry="10" transform="rotate(-25 70 150)"/><ellipse cx="130" cy="140" rx="22" ry="10" transform="rotate(25 130 140)"/>${ptl}<circle cx="100" cy="70" r="16"/>`],
+["🌳","الشجرة",["#43a047","#8bc34a","#2e7d32","#795548","#a1522b","#e53935","#81d4fa"],`<rect x="0" y="178" width="200" height="22"/><rect x="88" y="110" width="24" height="70"/><circle cx="100" cy="75" r="50"/><circle cx="80" cy="70" r="8"/><circle cx="118" cy="60" r="8"/><circle cx="105" cy="95" r="8"/>`],
+["🏠","البيت",["#e53935","#fdd835","#1e88e5","#795548","#43a047","#fb8c00"],`<rect x="130" y="50" width="16" height="30"/><rect x="40" y="100" width="120" height="80"/><polygon points="30,100 100,40 170,100"/><rect x="88" y="130" width="26" height="50"/><rect x="50" y="115" width="26" height="26"/><rect x="126" y="115" width="26" height="26"/>`],
+["🐟","السمكة",["#fb8c00","#1e88e5","#fdd835","#e53935","#26c6da","#43a047","#8e24aa"],`<polygon points="140,100 185,65 185,135"/><polygon points="80,68 100,40 115,70"/><ellipse cx="90" cy="100" rx="55" ry="35"/><circle cx="65" cy="92" r="6"/>`],
+["🦋","الفراشة",["#8e24aa","#f48fb1","#1e88e5","#fb8c00","#fdd835","#e53935"],`<ellipse cx="65" cy="80" rx="40" ry="30" transform="rotate(-20 65 80)"/><ellipse cx="135" cy="80" rx="40" ry="30" transform="rotate(20 135 80)"/><ellipse cx="72" cy="130" rx="28" ry="22" transform="rotate(20 72 130)"/><ellipse cx="128" cy="130" rx="28" ry="22" transform="rotate(-20 128 130)"/><ellipse cx="100" cy="105" rx="9" ry="42"/>`],
+["🚗","السيارة",["#e53935","#1e88e5","#fdd835","#43a047","#9e9e9e","#424242","#90caf9"],`<rect x="20" y="110" width="160" height="40" rx="12"/><path d="M50 110L70 72H130L155 110Z"/><path d="M62 106L76 80H98V106Z"/><path d="M104 80H126L142 106H104Z"/><circle cx="55" cy="152" r="18"/><circle cx="145" cy="152" r="18"/>`],
+["🚌","الحافلة",["#fdd835","#fb8c00","#1e88e5","#e53935","#9e9e9e","#424242","#90caf9"],`<rect x="15" y="60" width="170" height="85" rx="14"/><rect x="28" y="75" width="34" height="30" rx="4"/><rect x="70" y="75" width="34" height="30" rx="4"/><rect x="112" y="75" width="34" height="30" rx="4"/><rect x="154" y="75" width="22" height="65" rx="3"/><circle cx="55" cy="148" r="16"/><circle cx="145" cy="148" r="16"/>`],
+["🌈","قوس قزح",["#e53935","#fb8c00","#fdd835","#43a047","#1e88e5","#8e24aa","#81d4fa"],`<rect x="0" y="0" width="200" height="200"/>${bnd}<ellipse cx="45" cy="150" rx="35" ry="18"/><ellipse cx="155" cy="150" rx="35" ry="18"/>`]
+];
+function blip(){try{AC();const o=A.createOscillator(),g=A.createGain(),t=A.currentTime;o.frequency.value=500+Math.random()*300;env(g,t,[[.02,.1],[.15,.0001]]);o.connect(g);g.connect(A.destination);o.start(t);o.stop(t+.2)}catch(e){}}
+function paint(i=0){
+ const P=PIC[i];let sel=null,done=0;
+ app.innerHTML=`<div class="row" style="margin-bottom:10px">${PIC.map((p,j)=>`<button class="rb" style="${j==i?"outline:4px solid #ff4f8b":""}" data-j="${j}">${p[0]}</button>`).join("")}</div>
+ <div class="stage"><div class="nm" style="font-size:1.4rem">${P[1]}</div><div class="msg">اختاري لوناً ثم اضغطي على الصورة 🎨</div>
+ <div class="cwrap"><div class="pal">${[...P[2],"#ffffff"].map(c=>`<button class="cs" style="background:${c}" data-c="${c}"></button>`).join("")}</div>
+ <svg id="art" viewBox="0 0 200 200">${P[3].replace(/\/>/g,' class="rg" fill="#fff" stroke="#4a2c6b" stroke-width="3" stroke-linejoin="round"/>')}</svg></div>
+ <button class="btn b4" id="rs">🧹 ابدئي من جديد</button></div>`;
+ app.querySelectorAll("[data-j]").forEach(b=>b.onclick=()=>paint(+b.dataset.j));
+ app.querySelectorAll(".cs").forEach(b=>b.onclick=()=>{sel=b.dataset.c;app.querySelectorAll(".cs").forEach(x=>x.classList.remove("on"));b.classList.add("on");blip()});
+ const rg=[...app.querySelectorAll(".rg")];
+ rg.forEach(e=>e.onclick=()=>{
+  if(!sel){toast("اختاري لوناً من الشريط أولاً 🎨");return}
+  e.setAttribute("fill",sel);blip();
+  if(!done&&rg.every(x=>!["#fff","#ffffff"].includes(x.getAttribute("fill")))){done=1;star();cheer();confetti()}
+ });
+ $("#rs").onclick=()=>paint(i);
+}
+
+// ===== قفل ولي الأمر =====
+$("#lk").onclick=()=>{
+ const a=6+Math.random()*7|0,b=6+Math.random()*7|0,ov=document.createElement("div");
+ ov.className="ov";
+ ov.innerHTML=`<div class="gate"><h2>🔒 للوالدين فقط</h2><div>كم حاصل ${a} × ${b} ؟</div><input id="gi" type="number" inputmode="numeric"><div class="row"><button class="btn" id="go1">تأكيد</button><button class="btn b4" id="go2">رجوع</button></div><div class="msg" id="gm"></div></div>`;
+ document.body.appendChild(ov);
+ $("#go2").onclick=()=>ov.remove();
+ $("#go1").onclick=()=>{if(+$("#gi").value==a*b){ov.remove();toast("للخروج: اضغطي زر الرئيسية في الهاتف 👋")}else $("#gm").textContent="الإجابة غير صحيحة"};
+};
+
+go("home");
+</script>
+</body>
+</html>
