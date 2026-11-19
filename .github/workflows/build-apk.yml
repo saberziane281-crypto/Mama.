@@ -22,10 +22,11 @@ jobs:
       - name: Create Android project
         run: |
           npm init -y
-          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
+          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6 @capacitor-community/text-to-speech@5
           npx cap init "تعلّم مع ماما" com.mama.learn --web-dir www
           npx cap add android
           npx cap sync android
+          sed -i 's#</manifest>#<queries><intent><action android:name="android.intent.action.TTS_SERVICE"/></intent></queries></manifest>#' android/app/src/main/AndroidManifest.xml
       - name: Set app icon
         run: |
           pip install pillow
