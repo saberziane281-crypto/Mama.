@@ -143,9 +143,12 @@ function vis(it){
 let VO=null;
 function pv(){if("speechSynthesis"in window)VO=speechSynthesis.getVoices().find(v=>v.lang&&v.lang.startsWith("ar"))||null}
 if("speechSynthesis"in window){pv();speechSynthesis.onvoiceschanged=pv}
-function speak(t,r=.8,p=1.3){if(!("speechSynthesis"in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="ar-SA";u.rate=r;u.pitch=p;if(VO)u.voice=VO;speechSynthesis.speak(u)}
+let NT=null;
+function nativeTTS(){if(NT===null){try{NT=window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform()?Capacitor.registerPlugin("TextToSpeech"):false}catch(e){NT=false}}return NT}
+function speak(t,r=.8,p=1.3){const N=nativeTTS();if(N){try{N.stop().catch(()=>{});N.speak({text:t,lang:"ar-SA",rate:r,pitch:p,volume:1,category:"ambient"}).catch(()=>{})}catch(e){}return}if(!("speechSynthesis"in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="ar-SA";u.rate=r;u.pitch=p;if(VO)u.voice=VO;speechSynthesis.speak(u)}
 let A=null;
-const AC=()=>A=A||new(window.AudioContext||window.webkitAudioContext)();
+const AC=()=>{A=A||new(window.AudioContext||window.webkitAudioContext)();if(A.state=="suspended")A.resume();return A};
+document.addEventListener("touchstart",()=>{try{AC()}catch(e){}},{once:true});
 function env(g,t,pts){g.gain.setValueAtTime(.0001,t);pts.forEach(([dt,v])=>g.gain.linearRampToValueAtTime(v,t+dt))}
 // ضجيج جمهور يهتف + صفارة احتفال
 function cheer(){
