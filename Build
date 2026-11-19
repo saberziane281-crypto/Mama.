@@ -1,0 +1,52 @@
+name: Build APK
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Prepare web files
+        run: |
+          mkdir www
+          cp index.html manifest.json icon-192.png icon-512.png www/
+      - name: Create Android project
+        run: |
+          npm init -y
+          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
+          npx cap init "تعلّم مع ماما" com.mama.learn --web-dir www
+          npx cap add android
+          npx cap sync android
+      - name: Set app icon
+        run: |
+          pip install pillow
+          python3 - <<'PY'
+          import os, shutil
+          from PIL import Image
+          res = 'android/app/src/main/res'
+          shutil.rmtree(res + '/mipmap-anydpi-v26', ignore_errors=True)
+          im = Image.open('icon-512.png').convert('RGBA')
+          for d, s in {'mdpi':48,'hdpi':72,'xhdpi':96,'xxhdpi':144,'xxxhdpi':192}.items():
+              p = f'{res}/mipmap-{d}'
+              os.makedirs(p, exist_ok=True)
+              for n in ('ic_launcher', 'ic_launcher_round', 'ic_launcher_foreground'):
+                  im.resize((s, s)).save(f'{p}/{n}.png')
+          PY
+      - name: Build APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mama-app-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
